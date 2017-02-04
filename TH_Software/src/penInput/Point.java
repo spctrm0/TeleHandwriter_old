@@ -1,4 +1,4 @@
-package main;
+package penInput;
 
 public class Point
 {

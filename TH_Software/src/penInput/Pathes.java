@@ -1,4 +1,4 @@
-package main;
+package penInput;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +8,7 @@ public class Pathes
 {
 	private List<Path> pathes;
 
-	Pathes()
+	public Pathes()
 	{
 		pathes = Collections.synchronizedList(new ArrayList<Path>());
 	}

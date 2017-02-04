@@ -1,27 +1,21 @@
-package main;
+package penInput;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import grblComm.GrblComm;
+
 public class PathToGCode
 {
-	Pathes	pathes;
-	int		conversionCnt	= 0;
+	int			conversionCnt	= 0;
 
-	PathToGCode(Pathes _pathes)
+	Pathes		pathes;
+	GrblComm	grblComm;
+
+	public PathToGCode(Pathes _pathes, GrblComm _grblComm)
 	{
 		pathes = _pathes;
-	}
-
-	void threadLoop()
-	{
-		for (int i = conversionCnt; i < pathes.getPathesNum(); i++)
-			if (pathes.getPath(i).isFinished())
-			{
-				System.out.println(convert(pathes.getPath(i)));
-				conversionCnt++;
-				System.out.println("conversionCnt: " + conversionCnt);
-			}
+		grblComm = _grblComm;
 	}
 
 	String convert(Path _path)
@@ -74,5 +68,17 @@ public class PathToGCode
 			prevPoint_ = point_;
 		}
 		return gCodes_.toString();
+	}
+
+	public void threadLoop()
+	{
+		for (int i = conversionCnt; i < pathes.getPathesNum(); i++)
+			if (pathes.getPath(i).isFinished())
+			{
+				String[] split_ = convert(pathes.getPath(i)).split("\n");
+				for (String gCode_ : split_)
+					grblComm.send(gCode_);
+				conversionCnt++;
+			}
 	}
 }

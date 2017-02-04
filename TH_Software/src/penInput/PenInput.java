@@ -1,4 +1,4 @@
-package main;
+package penInput;
 
 import codeanticode.tablet.Tablet;
 import processing.core.PApplet;
@@ -6,12 +6,14 @@ import processing.event.MouseEvent;
 
 public class PenInput
 {
-	private PApplet	p5;
-	private Tablet	tablet;
 	private boolean	isWritable	= true;
+
+	private Tablet	tablet;
+
+	private PApplet	p5;
 	private Pathes	pathes;
 
-	PenInput(PApplet _p5, Pathes _pathes)
+	public PenInput(PApplet _p5, Pathes _pathes)
 	{
 		p5 = _p5;
 		p5.registerMethod("mouseEvent", this);

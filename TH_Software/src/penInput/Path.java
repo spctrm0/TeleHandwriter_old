@@ -1,4 +1,4 @@
-package main;
+package penInput;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -3,19 +3,19 @@ package penInput;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import grblComm.GrblComm;
+import comm.OscComm;
 
 public class PathToGCode
 {
-	int			conversionCnt	= 0;
+	int		conversionCnt	= 0;
 
-	Pathes		pathes;
-	GrblComm	grblComm;
+	Pathes	pathes;
+	OscComm	oscComm;
 
-	public PathToGCode(Pathes _pathes, GrblComm _grblComm)
+	public PathToGCode(Pathes _pathes, OscComm _oscComm)
 	{
 		pathes = _pathes;
-		grblComm = _grblComm;
+		oscComm = _oscComm;
 	}
 
 	String convert(Path _path)
@@ -77,7 +77,7 @@ public class PathToGCode
 			{
 				String[] split_ = convert(pathes.getPath(i)).split("\n");
 				for (String gCode_ : split_)
-					grblComm.send(gCode_);
+					oscComm.sendGCode(gCode_, false);
 				conversionCnt++;
 			}
 	}

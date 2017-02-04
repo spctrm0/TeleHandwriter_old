@@ -1,7 +1,8 @@
 package main;
 
-import grblComm.GrblComm;
-import grblComm.SerialComm;
+import comm.GrblComm;
+import comm.OscComm;
+import comm.SerialComm;
 import penInput.PathToGCode;
 import penInput.Pathes;
 import penInput.PenInput;
@@ -15,6 +16,7 @@ public class Main extends PApplet
 	PathToGCode	gCodeConverter;
 	SerialComm	serialComm;
 	GrblComm	grblComm;
+	OscComm		oscComm;
 
 	public void settings()
 	{
@@ -27,7 +29,8 @@ public class Main extends PApplet
 		penInput = new PenInput(this, pathes);
 		serialComm = new SerialComm(this);
 		grblComm = new GrblComm(serialComm);
-		gCodeConverter = new PathToGCode(pathes, grblComm);
+		oscComm = new OscComm(this);
+		gCodeConverter = new PathToGCode(pathes, oscComm);
 		thread("serialCommThread");
 		thread("gCodeConverterThread");
 		thread("grblCommThread");
@@ -40,7 +43,7 @@ public class Main extends PApplet
 	public void keyPressed()
 	{
 		if (key == 'a')
-			serialComm.setConnected(true);
+			serialComm.updateConnection();
 	}
 
 	public void SerialEvent(Serial _serialEvt)

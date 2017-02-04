@@ -1,4 +1,4 @@
-package grblComm;
+package comm;
 
 import java.util.ArrayList;
 import java.util.Collections;

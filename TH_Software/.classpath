@@ -29,5 +29,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="P5Lib/Tablet/library/Tablet.jar"/>
+	<classpathentry kind="lib" path="P5Lib/oscP5/library/oscP5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

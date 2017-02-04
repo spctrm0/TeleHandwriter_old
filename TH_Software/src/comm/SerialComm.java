@@ -1,4 +1,4 @@
-package grblComm;
+package comm;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +37,37 @@ public class SerialComm
 		return isConnected;
 	}
 
+	void setConnected(boolean _isConnected)
+	{
+		isConnected = _isConnected;
+	}
+
+	public void updateConnection()
+	{
+		disconnect();
+	}
+
+	void connect(int _portIdx)
+	{
+		String portName_ = Serial.list()[_portIdx];
+		disconnect();
+		srlPort = new Serial(p5, portName_, baudRate, parity, dataBits, stopBits);
+		connectTime = System.nanoTime();
+	}
+
+	void disconnect()
+	{
+		if (srlPort != null)
+			srlPort.stop();
+		srlPort = null;
+		setConnected(false);
+	}
+
+	float getWaitingTimeElapsedSec()
+	{
+		return TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - connectTime);
+	}
+
 	void send(String _msg)
 	{
 		srlPort.write(_msg);
@@ -58,32 +89,6 @@ public class SerialComm
 			}
 			charToStrBfr.setLength(0);
 		}
-	}
-
-	void connect(int _portIdx)
-	{
-		String portName_ = Serial.list()[_portIdx];
-		if (srlPort != null)
-			srlPort.stop();
-		srlPort = new Serial(p5, portName_, baudRate, parity, dataBits, stopBits);
-		connectTime = System.nanoTime();
-	}
-
-	void disconnect()
-	{
-		srlPort.stop();
-		srlPort = null;
-		setConnected(false);
-	}
-
-	public void setConnected(boolean _isConnected)
-	{
-		isConnected = _isConnected;
-	}
-
-	float getWaitingTimeElapsedSec()
-	{
-		return TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - connectTime);
 	}
 
 	public void threadLoop()

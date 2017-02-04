@@ -1,22 +1,22 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Path
 {
-	ArrayList<Point>	points;
-	boolean				isConverted	= false;
+	private List<Point> points;
 
 	Path(int _x, int _y, float _z, long _timeNano)
 	{
-		points = new ArrayList<Point>();
+		points = Collections.synchronizedList(new ArrayList<Point>());
 		addPoint(_x, _y, _z, _timeNano, false);
 	}
 
-	void addPoint(int _x, int _y, float _z, long _timeNano, boolean _isLastPoint)
+	Point getPoint(int _idx)
 	{
-		int idx_ = points.size();
-		points.add(new Point(_x, _y, _z, _timeNano, idx_, _isLastPoint));
+		return points.get(_idx);
 	}
 
 	Point getLastPoint()
@@ -24,28 +24,18 @@ public class Path
 		return points.get(points.size() - 1);
 	}
 
-	boolean isFinished()
-	{
-		return getLastPoint().isLastPoint;
-	}
-
 	int getPointsNum()
 	{
 		return points.size();
 	}
 
-	ArrayList<Point> getPoints()
+	void addPoint(int _x, int _y, float _z, long _timeNano, boolean _isLastPoint)
 	{
-		return points;
+		points.add(new Point(_x, _y, _z, _timeNano, _isLastPoint));
 	}
 
-	boolean isConverted()
+	boolean isFinished()
 	{
-		return isConverted;
-	}
-
-	void setConverted(boolean _isConverted)
-	{
-		isConverted = _isConverted;
+		return getLastPoint().isLastPoint();
 	}
 }

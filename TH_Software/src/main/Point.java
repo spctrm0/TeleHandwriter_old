@@ -2,19 +2,17 @@ package main;
 
 public class Point
 {
-	int		x, y;
-	float	z;
-	long	timeNano;
-	int		idx;
-	boolean	isLastPoint	= false;
+	private int		x, y;
+	private float	z;
+	private long	timeNano;
+	private boolean	isLastPoint	= false;
 
-	Point(int _x, int _y, float _z, long _timeNano, int _idx, boolean _isLastPoint)
+	Point(int _x, int _y, float _z, long _timeNano, boolean _isLastPoint)
 	{
 		x = _x;
 		y = _y;
 		z = _z;
 		timeNano = _timeNano;
-		idx = _idx;
 		isLastPoint = _isLastPoint;
 	}
 
@@ -36,11 +34,6 @@ public class Point
 	public long getTimeNano()
 	{
 		return timeNano;
-	}
-
-	public int getIdx()
-	{
-		return idx;
 	}
 
 	public boolean isLastPoint()

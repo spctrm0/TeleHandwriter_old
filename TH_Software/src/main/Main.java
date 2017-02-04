@@ -4,8 +4,9 @@ import processing.core.PApplet;
 
 public class Main extends PApplet
 {
+	Pathes			pathes;
 	PenInput		penInput;
-	GCodeConverter	gCodeConverter;
+	PathToGCode	gCodeConverter;
 
 	public void settings()
 	{
@@ -14,22 +15,21 @@ public class Main extends PApplet
 
 	public void setup()
 	{
-		penInput = new PenInput(this);
-		gCodeConverter = new GCodeConverter(penInput.pathes);
+		pathes = new Pathes();
+		penInput = new PenInput(this, pathes);
+		gCodeConverter = new PathToGCode(pathes);
 		thread("gCodeConverter");
 	}
 
 	public void draw()
 	{
-		println("conversionCnt:" + gCodeConverter.conversionCnt);
-		println("pathes.size():" + gCodeConverter.pathes.size());
 	}
 
 	public void gCodeConverter()
 	{
 		while (true)
 		{
-			gCodeConverter.loop();
+			gCodeConverter.threadLoop();
 		}
 	}
 

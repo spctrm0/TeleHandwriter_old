@@ -23,7 +23,12 @@ public class Pathes
 		return pathes.get(pathes.size() - 1);
 	}
 
-	int getPathesNum()
+	void addPath(int _x, int _y, float _z, long _timeNano, boolean _isInternal)
+	{
+		pathes.add(new Path(_x, _y, _z, _timeNano, _isInternal));
+	}
+
+	public int getPathesNum()
 	{
 		return pathes.size();
 	}
@@ -33,13 +38,8 @@ public class Pathes
 		return getLastPath().getLastPoint();
 	}
 
-	void addPath(int _x, int _y, float _z, long _timeNano)
+	void addPoint(int _x, int _y, float _z, long _timeNano, boolean _isTail)
 	{
-		pathes.add(new Path(_x, _y, _z, _timeNano));
-	}
-
-	void addPoint(int _x, int _y, float _z, long _timeNano, boolean _isLastPoint)
-	{
-		getLastPath().addPoint(_x, _y, _z, _timeNano, _isLastPoint);
+		getLastPath().addPoint(_x, _y, _z, _timeNano, _isTail);
 	}
 }

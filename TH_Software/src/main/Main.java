@@ -3,6 +3,7 @@ package main;
 import comm.GrblComm;
 import comm.OscComm;
 import comm.SerialComm;
+import oscP5.OscMessage;
 import penInput.PathToGCode;
 import penInput.Pathes;
 import penInput.PenInput;
@@ -13,7 +14,7 @@ public class Main extends PApplet
 {
 	Pathes		pathes;
 	PenInput	penInput;
-	PathToGCode	gCodeConverter;
+	PathToGCode	pathToGCode;
 	SerialComm	serialComm;
 	GrblComm	grblComm;
 	OscComm		oscComm;
@@ -29,15 +30,20 @@ public class Main extends PApplet
 		penInput = new PenInput(this, pathes);
 		serialComm = new SerialComm(this);
 		grblComm = new GrblComm(serialComm);
-		oscComm = new OscComm(this);
-		gCodeConverter = new PathToGCode(pathes, oscComm);
+		oscComm = new OscComm(this, grblComm);
+		pathToGCode = new PathToGCode(pathes, oscComm);
 		thread("serialCommThread");
-		thread("gCodeConverterThread");
+		thread("pathToGCodeThread");
 		thread("grblCommThread");
 	}
 
 	public void draw()
 	{
+		background(255);
+		fill(0);
+		text((pathes.getPathesNum() + ", " + pathToGCode.getConvertedPathesNum()), width / 2.0f, height / 2.0f);
+		text((grblComm.getBufferRemain() + ", " + grblComm.getQueueCmdNum() + ", " + grblComm.getBufferCmdNum()),
+				width / 2.0f, height / 2.0f + 64);
 	}
 
 	public void keyPressed()
@@ -52,16 +58,21 @@ public class Main extends PApplet
 		serialComm.receive(replyChar_);
 	}
 
+	public void oscEvent(OscMessage _oscEvt)
+	{
+		oscComm.receive(_oscEvt);
+	}
+
 	public void serialCommThread()
 	{
 		while (true)
 			serialComm.threadLoop();
 	}
 
-	public void gCodeConverterThread()
+	public void pathToGCodeThread()
 	{
 		while (true)
-			gCodeConverter.threadLoop();
+			pathToGCode.threadLoop();
 	}
 
 	public void grblCommThread()

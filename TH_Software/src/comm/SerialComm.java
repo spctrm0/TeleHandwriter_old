@@ -2,6 +2,7 @@ package comm;
 
 import java.util.concurrent.TimeUnit;
 
+import main.Settings;
 import processing.core.PApplet;
 import processing.serial.Serial;
 
@@ -14,13 +15,13 @@ public class SerialComm
 	private final float		stopBits			= 1.0f;
 	private final char		delimeter			= '\r';
 	private final int		waitingTimeSec		= 3;
-	private final String	connectionChkTxt	= "Grbl 1.1e ['$' for help]";
+	private final String	connectionChecker	= Settings.connectionChecker;
 
 	private long			connectTime			= 0;
 	private int				portIdx				= -1;
 	private boolean			isConnected			= false;
 
-	private StringBuilder	charToStrBfr;
+	private StringBuilder	charToStrBuffer;
 
 	private PApplet			p5;
 	private Serial			srlPort;
@@ -63,11 +64,6 @@ public class SerialComm
 		setConnected(false);
 	}
 
-	float getWaitingTimeElapsedSec()
-	{
-		return TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - connectTime);
-	}
-
 	void send(String _msg)
 	{
 		srlPort.write(_msg);
@@ -76,19 +72,24 @@ public class SerialComm
 	public void receive(char _char)
 	{
 		if (_char != delimeter)
-			charToStrBfr.append(_char);
+			charToStrBuffer.append(_char);
 		else
 		{
-			String msg_ = charToStrBfr.toString().replaceAll("\\R", "");
+			String msg_ = charToStrBuffer.toString().replaceAll("\\R", "");
 			if (!msg_.isEmpty())
 			{
 				if (!isConnected)
-					if (msg_.equals(connectionChkTxt))
+					if (msg_.equals(connectionChecker))
 						setConnected(true);
 				grblBuffer.receive(msg_);
 			}
-			charToStrBfr.setLength(0);
+			charToStrBuffer.setLength(0);
 		}
+	}
+
+	float getWaitingTimeElapsedSec()
+	{
+		return TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - connectTime);
 	}
 
 	public void threadLoop()

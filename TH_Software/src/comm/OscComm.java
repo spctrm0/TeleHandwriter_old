@@ -1,12 +1,9 @@
 package comm;
 
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
-
+import main.Settings;
 import netP5.NetAddress;
 import oscP5.OscMessage;
 import oscP5.OscP5;
-import oscP5.OscProperties;
 import processing.core.PApplet;
 
 public class OscComm
@@ -20,9 +17,9 @@ public class OscComm
 	final String	localhost			= "127.0.0.1";
 
 	boolean			isConnected			= false;
-	int				myPort;
-	String			targetIp;
-	int				targetPort;
+	int				myPort				= Settings.myPort;
+	String			targetIp			= Settings.targetIp;
+	int				targetPort			= Settings.targetPort;
 
 	OscP5			oscPort;
 	NetAddress		myAddr;
@@ -32,13 +29,12 @@ public class OscComm
 	PApplet			p5;
 	GrblComm		grblComm;
 
-	public OscComm(PApplet _p5)
+	public OscComm(PApplet _p5, GrblComm _grblComm)
 	{
 		p5 = _p5;
 		p5.registerMethod("dispose", this);
-
+		grblComm = _grblComm;
 		msg = new OscMessage("");
-
 		openPort();
 		setMyAddr();
 		setTargetAddr();
@@ -117,7 +113,9 @@ public class OscComm
 
 	public void receive(OscMessage _oscMsg)
 	{
-		if (_oscMsg.addrPattern().equals(addrPtrnAsk))
+		if (_oscMsg.addrPattern().equals(addrPtrnInter) || _oscMsg.addrPattern().equals(addrPtrnExter))
+			grblComm.send(_oscMsg.get(0).stringValue());
+		else if (_oscMsg.addrPattern().equals(addrPtrnAsk))
 		{
 			setConnected(false);
 			sendConnectionMsg(addrPtrnRpl);
@@ -126,8 +124,8 @@ public class OscComm
 		{
 			if (_oscMsg.get(0).stringValue().equals(targetIp) && _oscMsg.get(1).intValue() == targetPort)
 			{
-				sendConnectionMsg(addrPtrnRplBack);
 				setConnected(true);
+				sendConnectionMsg(addrPtrnRplBack);
 			}
 		}
 		else if (_oscMsg.addrPattern().equals(addrPtrnRplBack))
@@ -140,8 +138,6 @@ public class OscComm
 			if (_oscMsg.get(0).stringValue().equals(targetIp) && _oscMsg.get(1).intValue() == targetPort)
 				setConnected(false);
 		}
-		else if (_oscMsg.addrPattern().equals(addrPtrnInter) || _oscMsg.addrPattern().equals(addrPtrnExter))
-			grblComm.send(_oscMsg.get(0).stringValue());
 	}
 
 	public void dispose()

@@ -4,48 +4,45 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import main.Settings;
+
 public class GrblComm
 {
-	private final int		bufferLimit	= 128;
+	private final int		bufferLimit			= 128;
+	private final String	connectionChecker	= Settings.connectionChecker;
 
-	private int				bufferSize	= 0;
+	private int				bufferSize			= 0;
 
-	private List<String>	buffer		= null;
-	private List<String>	waitingList	= null;
+	private List<String>	queue			= null;
+	private List<String>	buffer				= null;
 
 	SerialComm				serialComm;
 
 	public GrblComm(SerialComm _serialComm)
 	{
 		serialComm = _serialComm;
+		queue = Collections.synchronizedList(new ArrayList<String>());
 		buffer = Collections.synchronizedList(new ArrayList<String>());
-		waitingList = Collections.synchronizedList(new ArrayList<String>());
 	}
 
-	public void threadLoop()
-	{
-		if (serialComm.isConnected())
-			if (!waitingList.isEmpty())
-			{
-				String msg_ = waitingList.get(0);
-				if (getBufferRemain() <= msg_.length())
-				{
-					bufferSize += msg_.length();
-					buffer.add(msg_);
-					waitingList.remove(0);
-					serialComm.send(msg_);
-				}
-			}
-	}
-
-	int getBufferRemain()
+	public int getBufferRemain()
 	{
 		return bufferLimit - bufferSize;
 	}
 
+	public int getQueueCmdNum()
+	{
+		return queue.size();
+	}
+
+	public int getBufferCmdNum()
+	{
+		return buffer.size();
+	}
+
 	public void send(String _msg)
 	{
-		waitingList.add(_msg);
+		queue.add(_msg);
 	}
 
 	void receive(String _msg)
@@ -54,6 +51,27 @@ public class GrblComm
 		{
 			bufferSize -= buffer.get(0).length();
 			buffer.remove(0);
+		}
+		else if (_msg.equals(connectionChecker))
+		{
+			queue.clear();
+			buffer.clear();
+			bufferSize = 0;
+		}
+	}
+
+	public void threadLoop()
+	{
+		if (!queue.isEmpty())
+		{
+			String msg_ = queue.get(0);
+			if (getBufferRemain() >= msg_.length())
+			{
+				bufferSize += msg_.length();
+				buffer.add(msg_);
+				queue.remove(0);
+				// serialComm.send(msg_);
+			}
 		}
 	}
 }

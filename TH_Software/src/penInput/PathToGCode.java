@@ -1,13 +1,12 @@
 package penInput;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import comm.OscComm;
 
 public class PathToGCode
 {
-	int		conversionCnt	= 0;
+	int		convertedPathesNum	= 0;
 
 	Pathes	pathes;
 	OscComm	oscComm;
@@ -16,6 +15,11 @@ public class PathToGCode
 	{
 		pathes = _pathes;
 		oscComm = _oscComm;
+	}
+
+	public int getConvertedPathesNum()
+	{
+		return convertedPathesNum;
 	}
 
 	String convert(Path _path)
@@ -62,7 +66,7 @@ public class PathToGCode
 				BigDecimal feedRate_ = oneMinNano_.divide(durationNano_, 3, BigDecimal.ROUND_HALF_UP);
 				gCodes_.append(String.format("%.3f", feedRate_.doubleValue()));
 				gCodes_.append('\r');
-				if (!point_.isLastPoint())
+				if (!point_.isTail())
 					gCodes_.append('\n');
 			}
 			prevPoint_ = point_;
@@ -72,13 +76,13 @@ public class PathToGCode
 
 	public void threadLoop()
 	{
-		for (int i = conversionCnt; i < pathes.getPathesNum(); i++)
-			if (pathes.getPath(i).isFinished())
+		for (int i = convertedPathesNum; i < pathes.getPathesNum(); i++)
+			if (pathes.getPath(i).isCompleted())
 			{
 				String[] split_ = convert(pathes.getPath(i)).split("\n");
 				for (String gCode_ : split_)
-					oscComm.sendGCode(gCode_, false);
-				conversionCnt++;
+					oscComm.sendGCode(gCode_, pathes.getPath(i).isInternal());
+				convertedPathesNum++;
 			}
 	}
 }

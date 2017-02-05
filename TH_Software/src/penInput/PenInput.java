@@ -7,6 +7,7 @@ import processing.event.MouseEvent;
 public class PenInput
 {
 	private boolean	isWritable	= true;
+	private boolean	isInternal	= true;
 
 	private Tablet	tablet;
 
@@ -24,16 +25,15 @@ public class PenInput
 	public void mouseEvent(MouseEvent _mouseEvt)
 	{
 		if (isWritable)
-			if (_mouseEvt.getAction() == MouseEvent.PRESS)
-				pathes.addPath((int) tablet.getPenX(), (int) tablet.getPenY(), tablet.getPressure(), System.nanoTime());
-			else if (_mouseEvt.getAction() == MouseEvent.DRAG)
-				pathes.addPoint((int) tablet.getPenX(), (int) tablet.getPenY(), tablet.getPressure(), System.nanoTime(),
-						false);
-			else if (_mouseEvt.getAction() == MouseEvent.RELEASE)
-			{
-				pathes.addPoint((int) tablet.getPenX(), (int) tablet.getPenY(), tablet.getPressure(), System.nanoTime(),
-						true);
-				System.out.println("getPathesNum(): " + pathes.getPathesNum());
-			}
+			if (tablet.getPenKind() == Tablet.CURSOR)
+				if (_mouseEvt.getAction() == MouseEvent.PRESS)
+					pathes.addPath((int) tablet.getPenX(), (int) tablet.getPenY(), tablet.getPressure(),
+							System.nanoTime(), isInternal);
+				else if (_mouseEvt.getAction() == MouseEvent.DRAG)
+					pathes.addPoint((int) tablet.getPenX(), (int) tablet.getPenY(), tablet.getPressure(),
+							System.nanoTime(), false);
+				else if (_mouseEvt.getAction() == MouseEvent.RELEASE)
+					pathes.addPoint((int) tablet.getPenX(), (int) tablet.getPenY(), tablet.getPressure(),
+							System.nanoTime(), true);
 	}
 }

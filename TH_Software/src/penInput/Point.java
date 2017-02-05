@@ -4,16 +4,16 @@ public class Point
 {
 	private int		x, y;
 	private float	z;
-	private long	timeNano;
-	private boolean	isLastPoint	= false;
+	private long	time;
+	private boolean	isTail	= false;
 
-	Point(int _x, int _y, float _z, long _timeNano, boolean _isLastPoint)
+	Point(int _x, int _y, float _z, long _time, boolean _isTail)
 	{
 		x = _x;
 		y = _y;
 		z = _z;
-		timeNano = _timeNano;
-		isLastPoint = _isLastPoint;
+		time = _time;
+		isTail = _isTail;
 	}
 
 	public int getX()
@@ -33,11 +33,11 @@ public class Point
 
 	public long getTimeNano()
 	{
-		return timeNano;
+		return time;
 	}
 
-	public boolean isLastPoint()
+	public boolean isTail()
 	{
-		return isLastPoint;
+		return isTail;
 	}
 }

@@ -6,12 +6,20 @@ import java.util.List;
 
 public class Path
 {
-	private List<Point> points;
+	private boolean		isInternal;
 
-	Path(int _x, int _y, float _z, long _timeNano)
+	private List<Point>	points;
+
+	Path(int _x, int _y, float _z, long _timeNano, boolean _isInternal)
 	{
+		isInternal = _isInternal;
 		points = Collections.synchronizedList(new ArrayList<Point>());
 		addPoint(_x, _y, _z, _timeNano, false);
+	}
+
+	boolean isInternal()
+	{
+		return isInternal;
 	}
 
 	Point getPoint(int _idx)
@@ -24,18 +32,18 @@ public class Path
 		return points.get(points.size() - 1);
 	}
 
+	void addPoint(int _x, int _y, float _z, long _timeNano, boolean _isTail)
+	{
+		points.add(new Point(_x, _y, _z, _timeNano, _isTail));
+	}
+
 	int getPointsNum()
 	{
 		return points.size();
 	}
 
-	void addPoint(int _x, int _y, float _z, long _timeNano, boolean _isLastPoint)
+	boolean isCompleted()
 	{
-		points.add(new Point(_x, _y, _z, _timeNano, _isLastPoint));
-	}
-
-	boolean isFinished()
-	{
-		return getLastPoint().isLastPoint();
+		return getLastPoint().isTail();
 	}
 }

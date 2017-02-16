@@ -16,7 +16,14 @@ public class TabletPathes
 
 	public void addPath()
 	{
-		tabletPathes.add(new TabletPath());
+		try
+		{
+			tabletPathes.add(new TabletPath());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void addPoint(Tablet _tablet, MouseEvent _mouseEvt)

@@ -13,6 +13,16 @@ public class TabletInput
 
 	TabletPathes	tabletPathes;
 
+	enum TabletAction
+	{
+		PRESS, RELEASE, CLICK, DRAG, MOVE, ENTER, EXIT, WHEEL;
+
+		static TabletAction convertP5MouseAction(int _p5MouseAction)
+		{
+			return TabletAction.values()[_p5MouseAction - 1];
+		}
+	}
+
 	public TabletInput(PApplet _p5)
 	{
 		p5 = _p5;
@@ -22,24 +32,20 @@ public class TabletInput
 		tabletPathes = new TabletPathes();
 	}
 
-	public boolean isInputAction(int _mouseAction)
+	public boolean isInputAction(TabletAction _mouseAction)
 	{
-		return ((_mouseAction == MouseEvent.PRESS) || (_mouseAction == MouseEvent.DRAG)
-				|| (_mouseAction == MouseEvent.RELEASE));
-	}
-
-	public boolean isPressAction(int _mouseAction)
-	{
-		return (_mouseAction == MouseEvent.PRESS);
+		return ((_mouseAction == TabletAction.PRESS) || (_mouseAction == TabletAction.DRAG)
+				|| (_mouseAction == TabletAction.RELEASE));
 	}
 
 	public void mouseEvent(MouseEvent _mouseEvt)
 	{
 		// if (tablet.getPenKind() == Tablet.STYLUS)
 		// {
-		if (isInputAction(_mouseEvt.getAction()))
+		TabletAction mouseAction_ = TabletAction.convertP5MouseAction(_mouseEvt.getAction());
+		if (isInputAction(mouseAction_))
 		{
-			if (isPressAction(_mouseEvt.getAction()))
+			if (mouseAction_ == TabletAction.PRESS)
 				tabletPathes.addPath();
 			tabletPathes.addPoint(tablet, _mouseEvt);
 		}

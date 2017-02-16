@@ -2,6 +2,7 @@ package tabletInput;
 
 import codeanticode.tablet.Tablet;
 import processing.event.MouseEvent;
+import tabletInput.TabletInput.TabletAction;
 
 public class TabletPoint
 {
@@ -32,21 +33,20 @@ public class TabletPoint
 		timeInMillis = _timeInMillis;
 	}
 
-	public void setTypeByMouseAction(int _mouseAction)
+	public void setTypeByTabletAction(TabletAction _mouseAction)
 	{
 		switch (_mouseAction)
 		{
-			// PRESS
-			case 1:
+			case PRESS:
 				type = PointType.HEAD;
 				break;
-			// DRAG
-			case 4:
+			case DRAG:
 				type = PointType.BODY;
 				break;
-			// RELEASE
-			case 2:
+			case RELEASE:
 				type = PointType.TAIL;
+				break;
+			default:
 				break;
 		}
 	}
@@ -56,7 +56,8 @@ public class TabletPoint
 		setXY((int) _tablet.getPenX(), (int) _tablet.getPenY());
 		setPressure(_tablet.getPressure());
 		setTimeInMillis(_mouseEvt.getMillis());
-		setTypeByMouseAction(_mouseEvt.getAction());
+		TabletAction tabletAction_ = TabletAction.convertP5MouseAction(_mouseEvt.getAction());
+		setTypeByTabletAction(tabletAction_);
 	}
 
 	public int getX()

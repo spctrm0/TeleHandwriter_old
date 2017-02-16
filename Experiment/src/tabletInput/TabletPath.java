@@ -32,6 +32,11 @@ public class TabletPath
 		return false;
 	}
 
+	public Deque<TabletPoint> getPoints()
+	{
+		return tabletPoints;
+	}
+
 	@Override
 	protected void finalize()
 	{

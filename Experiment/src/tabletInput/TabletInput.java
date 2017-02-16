@@ -1,5 +1,7 @@
 package tabletInput;
 
+import java.util.Deque;
+
 import codeanticode.tablet.Tablet;
 import processing.core.*;
 import processing.event.*;
@@ -11,7 +13,7 @@ public class TabletInput
 
 	TabletPathes	tabletPathes;
 
-	TabletInput(PApplet _p5)
+	public TabletInput(PApplet _p5)
 	{
 		p5 = _p5;
 		p5.registerMethod("mouseEvent", this);
@@ -20,13 +22,13 @@ public class TabletInput
 		tabletPathes = new TabletPathes();
 	}
 
-	boolean isInputAction(int _mouseAction)
+	public boolean isInputAction(int _mouseAction)
 	{
 		return ((_mouseAction == MouseEvent.PRESS) || (_mouseAction == MouseEvent.DRAG)
 				|| (_mouseAction == MouseEvent.RELEASE));
 	}
 
-	boolean isPressAction(int _mouseAction)
+	public boolean isPressAction(int _mouseAction)
 	{
 		return (_mouseAction == MouseEvent.PRESS);
 	}
@@ -38,9 +40,14 @@ public class TabletInput
 		if (isInputAction(_mouseEvt.getAction()))
 		{
 			if (isPressAction(_mouseEvt.getAction()))
-				tabletPathes.addTabletPath();
+				tabletPathes.addPath();
 			tabletPathes.addPoint(tablet, _mouseEvt);
 		}
 		// }
+	}
+
+	public Deque<TabletPath> getPathes()
+	{
+		return tabletPathes.getPathes();
 	}
 }

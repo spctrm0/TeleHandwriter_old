@@ -9,17 +9,17 @@ public class TabletPathes
 {
 	Deque<TabletPath> tabletPathes;
 
-	TabletPathes()
+	public TabletPathes()
 	{
 		tabletPathes = new LinkedList<TabletPath>();
 	}
 
-	void addTabletPath()
+	public void addPath()
 	{
 		tabletPathes.add(new TabletPath());
 	}
 
-	void addPoint(Tablet _tablet, MouseEvent _mouseEvt)
+	public void addPoint(Tablet _tablet, MouseEvent _mouseEvt)
 	{
 		try
 		{
@@ -29,5 +29,10 @@ public class TabletPathes
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public Deque<TabletPath> getPathes()
+	{
+		return tabletPathes;
 	}
 }

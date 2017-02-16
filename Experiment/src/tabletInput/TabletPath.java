@@ -9,17 +9,17 @@ public class TabletPath
 {
 	Deque<TabletPoint> tabletPoints;
 
-	TabletPath()
+	public TabletPath()
 	{
 		tabletPoints = new LinkedList<TabletPoint>();
 	}
 
-	void addPoint(Tablet _tablet, MouseEvent _mouseEvt)
+	public void addPoint(Tablet _tablet, MouseEvent _mouseEvt)
 	{
 		tabletPoints.add(new TabletPoint(_tablet, _mouseEvt));
 	}
 
-	boolean isComplete()
+	public boolean isComplete()
 	{
 		try
 		{
@@ -27,8 +27,9 @@ public class TabletPath
 		}
 		catch (Exception e)
 		{
-			return false;
+			e.printStackTrace();
 		}
+		return false;
 	}
 
 	@Override
@@ -36,5 +37,11 @@ public class TabletPath
 	{
 		if (tabletPoints.isEmpty())
 			tabletPoints = null;
+		else
+		{
+			while (!tabletPoints.isEmpty())
+				tabletPoints.remove();
+			tabletPoints = null;
+		}
 	}
 }

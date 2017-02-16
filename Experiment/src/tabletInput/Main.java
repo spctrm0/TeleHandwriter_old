@@ -20,6 +20,7 @@ public class Main extends PApplet
 
 	public void draw()
 	{
+
 	}
 
 	static public void main(String[] passedArgs)

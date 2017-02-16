@@ -26,13 +26,19 @@ public class TabletInput
 				|| (_mouseAction == MouseEvent.RELEASE));
 	}
 
+	boolean isPressAction(int _mouseAction)
+	{
+		return (_mouseAction == MouseEvent.PRESS);
+	}
+
 	public void mouseEvent(MouseEvent _mouseEvt)
 	{
 		// if (tablet.getPenKind() == Tablet.STYLUS)
 		// {
 		if (isInputAction(_mouseEvt.getAction()))
 		{
-			tabletPathes.addTabletPath();
+			if (isPressAction(_mouseEvt.getAction()))
+				tabletPathes.addTabletPath();
 			tabletPathes.addPoint(tablet, _mouseEvt);
 		}
 		// }

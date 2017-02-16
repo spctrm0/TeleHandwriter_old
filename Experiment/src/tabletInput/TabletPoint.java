@@ -2,7 +2,6 @@ package tabletInput;
 
 import codeanticode.tablet.Tablet;
 import processing.event.MouseEvent;
-import tabletInput.TabletPoint.PointType;
 
 public class TabletPoint
 {
@@ -17,23 +16,23 @@ public class TabletPoint
 
 	PointType type;
 
-	void setXY(int _x, int _y)
+	public void setXY(int _x, int _y)
 	{
 		x = _x;
 		y = _y;
 	}
 
-	void setPressure(float _pressure)
+	public void setPressure(float _pressure)
 	{
 		pressure = _pressure;
 	}
 
-	void setTimeInMillis(long _timeInMillis)
+	public void setTimeInMillis(long _timeInMillis)
 	{
 		timeInMillis = _timeInMillis;
 	}
 
-	void setTypeByMouseAction(int _mouseAction)
+	public void setTypeByMouseAction(int _mouseAction)
 	{
 		switch (_mouseAction)
 		{
@@ -52,17 +51,12 @@ public class TabletPoint
 		}
 	}
 
-	TabletPoint(Tablet _tablet, MouseEvent _mouseEvt)
+	public TabletPoint(Tablet _tablet, MouseEvent _mouseEvt)
 	{
 		setXY((int) _tablet.getPenX(), (int) _tablet.getPenY());
 		setPressure(_tablet.getPressure());
 		setTimeInMillis(_mouseEvt.getMillis());
 		setTypeByMouseAction(_mouseEvt.getAction());
-	}
-
-	public boolean isTail()
-	{
-		return type == PointType.TAIL;
 	}
 
 	public int getX()
@@ -88,5 +82,15 @@ public class TabletPoint
 	public PointType getType()
 	{
 		return type;
+	}
+
+	public boolean isTail()
+	{
+		return type == PointType.TAIL;
+	}
+
+	public String toString()
+	{
+		return x + "," + y + "," + pressure + "," + timeInMillis + "," + type;
 	}
 }

@@ -7,8 +7,7 @@ import processing.event.MouseEvent;
 
 public class TabletPathes
 {
-	Deque<TabletPath>	tabletPathes;
-	TabletPath			tail;
+	Deque<TabletPath> tabletPathes;
 
 	TabletPathes()
 	{
@@ -28,7 +27,7 @@ public class TabletPathes
 		}
 		catch (Exception e)
 		{
-
+			e.printStackTrace();
 		}
 	}
 }

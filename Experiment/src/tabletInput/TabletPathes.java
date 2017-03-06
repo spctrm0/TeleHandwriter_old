@@ -7,7 +7,7 @@ import processing.event.MouseEvent;
 
 public class TabletPathes
 {
-	Deque<TabletPath> tabletPathes;
+	private Deque<TabletPath> tabletPathes;
 
 	public TabletPathes()
 	{

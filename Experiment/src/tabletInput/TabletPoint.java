@@ -6,34 +6,34 @@ import tabletInput.TabletInput.TabletAction;
 
 public class TabletPoint
 {
-	int		x, y;
-	float	pressure;
-	long	timeInMillis;
+	private int		x, y;
+	private float	pressure;
+	private long	time_ms;
 
-	enum PointType
+	public enum PointType
 	{
 		HEAD, BODY, TAIL;
 	}
 
-	PointType type;
+	private PointType type;
 
-	public void setXY(int _x, int _y)
+	private void setXY(int _x, int _y)
 	{
 		x = _x;
 		y = _y;
 	}
 
-	public void setPressure(float _pressure)
+	private void setPressure(float _pressure)
 	{
 		pressure = _pressure;
 	}
 
-	public void setTimeInMillis(long _timeInMillis)
+	private void setTime_ms(long _time_ms)
 	{
-		timeInMillis = _timeInMillis;
+		time_ms = _time_ms;
 	}
 
-	public void setTypeByTabletAction(TabletAction _mouseAction)
+	private void setTypeByTabletAction(TabletAction _mouseAction)
 	{
 		switch (_mouseAction)
 		{
@@ -51,13 +51,18 @@ public class TabletPoint
 		}
 	}
 
-	public TabletPoint(Tablet _tablet, MouseEvent _mouseEvt)
+	public void setPoint(Tablet _tablet, MouseEvent _mouseEvt)
 	{
 		setXY((int) _tablet.getPenX(), (int) _tablet.getPenY());
 		setPressure(_tablet.getPressure());
-		setTimeInMillis(_mouseEvt.getMillis());
+		setTime_ms(_mouseEvt.getMillis());
 		TabletAction tabletAction_ = TabletAction.convertP5MouseAction(_mouseEvt.getAction());
 		setTypeByTabletAction(tabletAction_);
+	}
+
+	public TabletPoint(Tablet _tablet, MouseEvent _mouseEvt)
+	{
+		setPoint(_tablet, _mouseEvt);
 	}
 
 	public int getX()
@@ -75,9 +80,9 @@ public class TabletPoint
 		return pressure;
 	}
 
-	public long getTimeInMillis()
+	public long getTime_ms()
 	{
-		return timeInMillis;
+		return time_ms;
 	}
 
 	public PointType getType()
@@ -90,8 +95,9 @@ public class TabletPoint
 		return type == PointType.TAIL;
 	}
 
+	@Override
 	public String toString()
 	{
-		return x + "," + y + "," + pressure + "," + timeInMillis + "," + type;
+		return x + "," + y + "," + pressure + "," + time_ms + "," + type;
 	}
 }

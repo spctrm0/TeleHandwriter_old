@@ -1,7 +1,5 @@
 package tabletInput;
 
-import tabletInput.TabletPoint.PointType;
-
 public class TabletPathAnalyzer
 {
 	final static float	monitorDiagonal_mm	= 584.2f;
@@ -18,30 +16,32 @@ public class TabletPathAnalyzer
 		for (TabletPath path_ : _tabletPathes.getPathes())
 		{
 			int pointIdx_ = 0;
-			TabletPoint prevPoint_ = null;
 			for (TabletPoint point_ : path_.getPoints())
 			{
 				System.out.print(pathIdx_ + "," + pointIdx_ + ",");
-				System.out.print(TabletPathAnalyzer.getAnalysis(prevPoint_, point_));
+				System.out.print(TabletPathAnalyzer.getAnalysis(point_));
 				System.out.println();
-				prevPoint_ = point_;
 				pointIdx_++;
 			}
 			pathIdx_++;
 		}
 	}
 
-	public static String getAnalysis(TabletPoint _prevPoint, TabletPoint _thisPoint)
+	public static String getAnalysis(TabletPoint _tabletPoint)
 	{
 		String result_ = "";
 
-		double x_mm_ = _thisPoint.getX() * pxToMm;
-		double y_mm_ = _thisPoint.getY() * pxToMm;
+		double x_mm_ = _tabletPoint.getX() * pxToMm;
+		double y_mm_ = _tabletPoint.getY() * pxToMm;
+		double pressure_ = _tabletPoint.getPressure();
 
 		result_ += x_mm_;
 		result_ += "," + y_mm_;
+		result_ += "," + pressure_;
 
-		if (_prevPoint != null && (_thisPoint.getType() == PointType.BODY || _thisPoint.getType() == PointType.TAIL))
+		TabletPoint prevTabletPoint_ = _tabletPoint.getPrevPoint();
+
+		if (prevTabletPoint_ != null)
 		{
 			double p_x_mm_;
 			double p_y_mm;
@@ -53,13 +53,13 @@ public class TabletPathAnalyzer
 			double velY_mmPerMin_;
 			double vel_mmPerMin_;
 
-			p_x_mm_ = _prevPoint.getX() * pxToMm;
-			p_y_mm = _prevPoint.getY() * pxToMm;
+			p_x_mm_ = prevTabletPoint_.getX() * pxToMm;
+			p_y_mm = prevTabletPoint_.getY() * pxToMm;
 			distX_mm_ = x_mm_ - p_x_mm_;
 			distY_mm_ = y_mm_ - p_y_mm;
 			dist_mm_ = Math.sqrt(distX_mm_ * distX_mm_ + distY_mm_ * distY_mm_);
 
-			duration_ms_ = _thisPoint.getTime_ms() - _prevPoint.getTime_ms();
+			duration_ms_ = _tabletPoint.getTime_ms() - prevTabletPoint_.getTime_ms();
 			velX_mmPerMin_ = 60 * 1000 * distX_mm_ / duration_ms_;
 			velY_mmPerMin_ = 60 * 1000 * distY_mm_ / duration_ms_;
 			vel_mmPerMin_ = 60 * 1000 * dist_mm_ / duration_ms_;

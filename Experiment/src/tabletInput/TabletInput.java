@@ -42,10 +42,10 @@ public class TabletInput
 	{
 		if (tablet.getPenKind() == Tablet.STYLUS)
 		{
-			TabletAction mouseAction_ = TabletAction.convertP5MouseAction(_mouseEvt.getAction());
-			if (isInputAction(mouseAction_))
+			TabletAction tabletAction_ = TabletAction.convertP5MouseAction(_mouseEvt.getAction());
+			if (isInputAction(tabletAction_))
 			{
-				if (mouseAction_ == TabletAction.PRESS)
+				if (tabletAction_ == TabletAction.PRESS)
 					tabletPathes.addPath();
 				tabletPathes.addPoint(tablet, _mouseEvt);
 			}

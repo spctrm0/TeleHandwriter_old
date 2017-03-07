@@ -13,9 +13,27 @@ public class TabletPoint
 	public enum PointType
 	{
 		HEAD, BODY, TAIL;
+
+		public static PointType getPointTypeFromTabletAction(TabletAction _tabletAction)
+		{
+			switch (_tabletAction)
+			{
+				case PRESS:
+					return PointType.HEAD;
+				case DRAG:
+					return PointType.BODY;
+				case RELEASE:
+					return PointType.TAIL;
+				default:
+					break;
+			}
+			return null;
+		}
 	}
 
-	private PointType type;
+	private PointType	type;
+
+	private TabletPoint	prevPoint;
 
 	private void setXY(int _x, int _y)
 	{
@@ -33,22 +51,9 @@ public class TabletPoint
 		time_ms = _time_ms;
 	}
 
-	private void setTypeByTabletAction(TabletAction _mouseAction)
+	private void setType(PointType _type)
 	{
-		switch (_mouseAction)
-		{
-			case PRESS:
-				type = PointType.HEAD;
-				break;
-			case DRAG:
-				type = PointType.BODY;
-				break;
-			case RELEASE:
-				type = PointType.TAIL;
-				break;
-			default:
-				break;
-		}
+		type = _type;
 	}
 
 	public void setPoint(Tablet _tablet, MouseEvent _mouseEvt)
@@ -57,12 +62,19 @@ public class TabletPoint
 		setPressure(_tablet.getPressure());
 		setTime_ms(_mouseEvt.getMillis());
 		TabletAction tabletAction_ = TabletAction.convertP5MouseAction(_mouseEvt.getAction());
-		setTypeByTabletAction(tabletAction_);
+		PointType type_ = PointType.getPointTypeFromTabletAction(tabletAction_);
+		setType(type_);
 	}
 
-	public TabletPoint(Tablet _tablet, MouseEvent _mouseEvt)
+	public void setPrevPoint(TabletPoint _prevPoint)
+	{
+		prevPoint = _prevPoint;
+	}
+
+	public TabletPoint(Tablet _tablet, MouseEvent _mouseEvt, TabletPoint _prevPoint)
 	{
 		setPoint(_tablet, _mouseEvt);
+		setPrevPoint(_prevPoint);
 	}
 
 	public int getX()
@@ -85,14 +97,24 @@ public class TabletPoint
 		return time_ms;
 	}
 
-	public PointType getType()
+	public boolean isHead()
 	{
-		return type;
+		return type == PointType.HEAD;
 	}
 
 	public boolean isTail()
 	{
 		return type == PointType.TAIL;
+	}
+
+	public PointType getType()
+	{
+		return type;
+	}
+
+	public TabletPoint getPrevPoint()
+	{
+		return prevPoint;
 	}
 
 	@Override

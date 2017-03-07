@@ -4,6 +4,8 @@ import java.util.*;
 
 import codeanticode.tablet.Tablet;
 import processing.event.MouseEvent;
+import tabletInput.TabletInput.TabletAction;
+import tabletInput.TabletPoint.PointType;
 
 public class TabletPath
 {
@@ -14,13 +16,49 @@ public class TabletPath
 		tabletPoints = new LinkedList<TabletPoint>();
 	}
 
-	public boolean isCoincideWithLastPoint(MouseEvent _mouseEvt)
+	public boolean isSameTypeWithLastPoint(MouseEvent _mouseEvt)
 	{
 		boolean result_ = false;
 		try
 		{
 			if (!tabletPoints.isEmpty())
+			{
+				TabletAction tabletAction_ = TabletAction.convertP5MouseAction(_mouseEvt.getAction());
+				PointType thisPointType_ = PointType.getPointTypeFromTabletAction(tabletAction_);
+				PointType lastPointType_ = tabletPoints.getLast().getType();
+				result_ = (thisPointType_ == lastPointType_);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return result_;
+	}
+
+	public boolean isCoincideWithLastPoint(MouseEvent _mouseEvt)
+	{
+		boolean result_ = false;
+		try
+		{
+			if (isSameTypeWithLastPoint(_mouseEvt))
 				result_ = tabletPoints.getLast().getTime_ms() == _mouseEvt.getMillis();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return result_;
+	}
+
+	public boolean isSameXYWithLastPoint(MouseEvent _mouseEvt)
+	{
+		boolean result_ = false;
+		try
+		{
+			if (isSameTypeWithLastPoint(_mouseEvt))
+				result_ = ((tabletPoints.getLast().getX() == (int) _mouseEvt.getX())
+						&& (tabletPoints.getLast().getY() == (int) _mouseEvt.getY()));
 		}
 		catch (Exception e)
 		{
@@ -33,10 +71,14 @@ public class TabletPath
 	{
 		try
 		{
-			if (isCoincideWithLastPoint(_mouseEvt))
+			if (isCoincideWithLastPoint(_mouseEvt) || isSameXYWithLastPoint(_mouseEvt))
+			{
+				System.out.println(isSameXYWithLastPoint(_mouseEvt));
 				tabletPoints.getLast().setPoint(_tablet, _mouseEvt);
+			}
 			else
-				tabletPoints.add(new TabletPoint(_tablet, _mouseEvt));
+				tabletPoints.add(
+						new TabletPoint(_tablet, _mouseEvt, tabletPoints.isEmpty() ? null : tabletPoints.getLast()));
 		}
 		catch (Exception e)
 		{

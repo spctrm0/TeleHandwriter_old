@@ -41,7 +41,7 @@ public class TabletInput {
 					penHeadCom.sendMsg(serialX + "," + serialY + "," + 0 + '\r');
 				} else {
 					if (_mouseEvt.getAction() == MouseEvent.RELEASE) {
-						pathes.finishPath(_mouseEvt.getX(), _mouseEvt.getY(), tablet.getPressure(),
+						pathes.completePath(_mouseEvt.getX(), _mouseEvt.getY(), tablet.getPressure(),
 								_mouseEvt.getMillis());
 					}
 					tiltX = tablet.getTiltX();

@@ -7,7 +7,7 @@ public class Point {
 	private long	timeMs;
 	private boolean	isTail	= false;
 
-	Point(int _x, int _y, float _z, long _timeMs, boolean _isTail) {
+	public Point(int _x, int _y, float _z, long _timeMs, boolean _isTail) {
 		x = _x;
 		y = _y;
 		z = _z;
@@ -15,23 +15,23 @@ public class Point {
 		isTail = _isTail;
 	}
 
-	public int getX() {
+	protected int getX() {
 		return x;
 	}
 
-	public int getY() {
+	protected int getY() {
 		return y;
 	}
 
-	public float getZ() {
+	protected float getZ() {
 		return z;
 	}
 
-	public long getTimeMs() {
+	protected long getTimeMs() {
 		return timeMs;
 	}
 
-	public boolean isTail() {
+	protected boolean isTail() {
 		return isTail;
 	}
 }

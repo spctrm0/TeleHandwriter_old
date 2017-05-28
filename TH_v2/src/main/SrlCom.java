@@ -1,29 +1,11 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import processing.core.PApplet;
 import processing.serial.Serial;
 
-public class SrlCom {
-
-	protected interface SrlListener {
-		void srlReceiveMsg(String _msg);
-	}
-
-	protected List<SrlListener> listeners = new ArrayList<SrlListener>();
-
-	protected void addListner(SrlListener _listener) {
-		listeners.add(_listener);
-	}
-
-	protected void speak(String _msg) {
-		System.out.println(_msg);
-		for (SrlListener listener : listeners)
-			listener.srlReceiveMsg(_msg);
-	}
+public abstract class SrlCom {
 
 	// SerialComm port
 	protected Serial		port;
@@ -36,8 +18,9 @@ public class SrlCom {
 	protected final char	delimeter				= '\r';
 
 	// SerialComm connection setting
-	protected final int		responseWaitingTimeMs	= 3000;
+	protected final int		responseWaitingTimeMs	= 2000;
 	protected String		expectedResponseMsg		= null;
+	protected String		responseBackMsg			= null;
 
 	// SerialComm status
 	protected int			portIdx					= -1;
@@ -45,13 +28,13 @@ public class SrlCom {
 	protected boolean		isConnected				= false;
 
 	// SerialComm variables
-	protected StringBuilder	charAssembleBuffer;
+	protected StringBuilder	charAssemblingBuffer;
 
 	// Reference
 	protected PApplet		p5;
 
 	protected SrlCom(PApplet _p5) {
-		charAssembleBuffer = new StringBuilder();
+		charAssemblingBuffer = new StringBuilder();
 		p5 = _p5;
 		p5.registerMethod("dispose", this);
 	}
@@ -76,6 +59,10 @@ public class SrlCom {
 		expectedResponseMsg = _expectedResponseMsg;
 	}
 
+	protected void setResponseBackMsg(String _responseBackMsg) {
+		responseBackMsg = _responseBackMsg;
+	}
+
 	protected void disconnect() {
 		if (port != null) {
 			port.clear();
@@ -93,24 +80,18 @@ public class SrlCom {
 		connectionAttemptTimeNs = System.nanoTime();
 	}
 
-	protected void sendMsg(String _msg) {
-		port.write(_msg);
-	}
+	protected abstract void sendMsg(String _msg);
 
-	protected void receiveAndAssembleChar(char _inChar) {
+	protected abstract void receiveMsg(String _msg);
+
+	protected void assembleCharAndDeliverMsg(char _inChar) {
 		if (_inChar != delimeter)
-			charAssembleBuffer.append(_inChar);
+			charAssemblingBuffer.append(_inChar);
 		else {
-			String assembledMsg_ = charAssembleBuffer.toString().replaceAll("\\R", "");
-			if (!assembledMsg_.isEmpty()) {
-				if (!isConnected)
-					if (assembledMsg_.equals(expectedResponseMsg)) {
-						port.clear();
-						isConnected = true;
-					}
-			}
-			speak(assembledMsg_);
-			charAssembleBuffer.setLength(0);
+			String assembledMsg_ = charAssemblingBuffer.toString().replaceAll("\\R", "");
+			charAssemblingBuffer.setLength(0);
+			if (!assembledMsg_.isEmpty())
+				receiveMsg(assembledMsg_);
 		}
 	}
 
@@ -118,7 +99,7 @@ public class SrlCom {
 		return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - connectionAttemptTimeNs);
 	}
 
-	protected void connectionLoop(int _occupiedPortIdx) {
+	protected void attemptConnectionLoop(int _occupiedPortIdx) {
 		while (!isConnected)
 			if (getWaitingTimeElapsedMs() > responseWaitingTimeMs) {
 				portIdx++;

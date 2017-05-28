@@ -1,43 +1,37 @@
 package main;
 
-public class Point
-{
+public class Point {
+
 	private int		x, y;
 	private float	z;
-	private long	time;
+	private long	timeMs;
 	private boolean	isTail	= false;
 
-	Point(int _x, int _y, float _z, long _time, boolean _isTail)
-	{
+	Point(int _x, int _y, float _z, long _timeMs, boolean _isTail) {
 		x = _x;
 		y = _y;
 		z = _z;
-		time = _time;
+		timeMs = _timeMs;
 		isTail = _isTail;
 	}
 
-	public int getX()
-	{
+	public int getX() {
 		return x;
 	}
 
-	public int getY()
-	{
+	public int getY() {
 		return y;
 	}
 
-	public float getZ()
-	{
+	public float getZ() {
 		return z;
 	}
 
-	public long getTimeNano()
-	{
-		return time;
+	public long getTimeMs() {
+		return timeMs;
 	}
 
-	public boolean isTail()
-	{
+	public boolean isTail() {
 		return isTail;
 	}
 }

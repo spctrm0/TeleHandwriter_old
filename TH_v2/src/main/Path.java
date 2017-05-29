@@ -13,34 +13,35 @@ public class Path {
 		addPoint(_x, _y, _z, _timeMs, false);
 	}
 
-	protected int getPointsNum() {
+	public int getPointsNum() {
 		return points.size();
 	}
 
-	protected Point getPoint(int _idx) {
+	public Point getPoint(int _idx) {
 		return points.get(_idx);
 	}
 
-	protected Point getLastPoint() {
+	public Point getLastPoint() {
 		return points.get(points.size() - 1);
 	}
 
-	protected boolean isCompleted() {
+	public boolean isCompleted() {
 		return getLastPoint().isTail();
 	}
 
-	protected void addPoint(int _x, int _y, float _z, long _timeMs, boolean _isTail) {
-		if (getPointsNum() > 0) {
-			float prevTimeMs_ = getLastPoint().getTimeMs();
-			if (prevTimeMs_ != _timeMs) {
-				points.add(new Point(_x, _y, _z, _timeMs, _isTail));
-			} else {
-				if (_isTail) {
-					points.add(new Point(_x, _y, _z, (_timeMs + 1), _isTail));
-				}
-			}
-		} else {
-			points.add(new Point(_x, _y, _z, _timeMs, _isTail));
-		}
+	public void addPoint(int _x, int _y, float _z, long _timeMs, boolean _isTail) {
+		// if (getPointsNum() > 0) {
+		// float prevTimeMs_ = getLastPoint().getTimeMs();
+		// if (prevTimeMs_ != _timeMs) {
+		// points.add(new Point(_x, _y, _z, _timeMs, _isTail));
+		// } else {
+		// if (_isTail) {
+		// points.add(new Point(_x, _y, _z, (_timeMs + 1), _isTail));
+		// }
+		// }
+		// } else {
+		// points.add(new Point(_x, _y, _z, _timeMs, _isTail));
+		// }
+		points.add(new Point(_x, _y, _z, _timeMs, _isTail));
 	}
 }

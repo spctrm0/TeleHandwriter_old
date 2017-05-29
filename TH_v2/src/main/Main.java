@@ -4,14 +4,19 @@ import processing.core.PApplet;
 import processing.serial.Serial;
 
 public class Main extends PApplet {
-	SrlCom[]	srlComm;	// 0: grblCom, 1: penHeadCom;
-	GrblCom		grblCom;
-	PenHeadCom	penHeadCom;
-	TabletInput	tabletInput;
-	PathToGCode	pathToGCode;
+	SrlCom[]				srlComm;				// 0: grblCom, 1:
+													// penHeadCom;
+	GrblCom					grblCom;
+	PenHeadCom				penHeadCom;
+
+	Pathes					pathes;
+
+	TabletInput				tabletInput;
+
+	PathToGCodeConverter	pathToGCodeConverter;
 
 	public void settings() {
-		fullScreen(1);
+		size(1280, 720);
 	}
 
 	public void setup() {
@@ -23,32 +28,38 @@ public class Main extends PApplet {
 		grblCom = (GrblCom) srlComm[0];
 		penHeadCom = (PenHeadCom) srlComm[1];
 
-		tabletInput = new TabletInput(this, grblCom, penHeadCom);
+		pathes = new Pathes();
 
-		pathToGCode = new PathToGCode(tabletInput.pathes, grblCom);
+		tabletInput = new TabletInput(this, pathes, grblCom, penHeadCom);
+
+		pathToGCodeConverter = new PathToGCodeConverter(pathes, grblCom);
 
 		srlComm[0].attemptConnectionLoop(-1);
 		if (srlComm[0].isConnected())
 			srlComm[1].attemptConnectionLoop(srlComm[0].getPortIdx());
 
-		thread("grblComThreadLoop");
-		thread("pathToGCodeThreadLoop");
+		thread("grblComThread");
+		thread("pathToGCodeThread");
 	}
 
-	public void grblComThreadLoop() {
+	public void grblComThread() {
 		while (true) {
 			grblCom.sendMsgThread();
 		}
 	}
 
-	public void pathToGCodeThreadLoop() {
+	public void pathToGCodeThread() {
 		while (true) {
-			pathToGCode.threadLoop();
+			pathToGCodeConverter.convertThread();
 		}
 	}
 
 	public void draw() {
 		background(255);
+		fill(0);
+		text(pathes.getPathesNum(), width / 2.0f, height / 2.0f);
+		text(pathToGCodeConverter.getConvertedPathesNum() + ", " + pathToGCodeConverter.getConvertedPointsNum(),
+				width / 2.0f, height / 2.0f + 20);
 	}
 
 	public void keyPressed() {

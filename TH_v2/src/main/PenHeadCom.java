@@ -11,14 +11,14 @@ public class PenHeadCom extends SrlCom {
 	}
 
 	@Override
-	protected void sendMsg(String _msg) {
-		System.out.print("(O)PenHead: ");
-		System.out.println(_msg);
+	public void sendMsg(String _msg) {
+//		System.out.print("(O)PenHead: ");
+//		System.out.print(_msg);
 		port.write(_msg);
 	}
 
 	@Override
-	protected void receiveMsg(String _msg) {
+	public void receiveMsg(String _msg) {
 		if (!isConnected) {
 			if (_msg.equals(expectedResponseMsg)) {
 				port.clear();

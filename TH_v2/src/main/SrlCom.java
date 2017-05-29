@@ -8,32 +8,32 @@ import processing.serial.Serial;
 public abstract class SrlCom {
 
 	// SerialComm port
-	protected Serial		port;
+	public Serial		port;
 
 	// SerialComm port property
-	protected final int		baudRate				= 115200;
-	protected final char	parity					= 'n';
-	protected final int		dataBits				= 8;
-	protected final float	stopBits				= 1.0f;
-	protected final char	delimeter				= '\r';
+	public final int		baudRate				= 115200;
+	public final char	parity					= 'n';
+	public final int		dataBits				= 8;
+	public final float	stopBits				= 1.0f;
+	public final char	delimeter				= '\r';
 
 	// SerialComm connection setting
-	protected final int		responseWaitingTimeMs	= 2000;
-	protected String		expectedResponseMsg		= null;
-	protected String		responseBackMsg			= null;
+	public final int		responseWaitingTimeMs	= 2000;
+	public String		expectedResponseMsg		= null;
+	public String		responseBackMsg			= null;
 
 	// SerialComm status
-	protected int			portIdx					= -1;
-	protected long			connectionAttemptTimeNs	= 0;
-	protected boolean		isConnected				= false;
+	public int			portIdx					= -1;
+	public long			connectionAttemptTimeNs	= 0;
+	public boolean		isConnected				= false;
 
 	// SerialComm variables
-	protected StringBuilder	charAssemblingBuffer;
+	public StringBuilder	charAssemblingBuffer;
 
 	// Reference
-	protected PApplet		p5;
+	public PApplet		p5;
 
-	protected SrlCom(PApplet _p5) {
+	public SrlCom(PApplet _p5) {
 		charAssemblingBuffer = new StringBuilder();
 		p5 = _p5;
 		p5.registerMethod("dispose", this);
@@ -43,27 +43,27 @@ public abstract class SrlCom {
 		disconnect();
 	}
 
-	protected int getPortIdx() {
+	public int getPortIdx() {
 		return portIdx;
 	}
 
-	protected boolean isMyPort(Serial _port) {
+	public boolean isMyPort(Serial _port) {
 		return _port == port;
 	}
 
-	protected boolean isConnected() {
+	public boolean isConnected() {
 		return isConnected;
 	}
 
-	protected void setExpectedResponseMsg(String _expectedResponseMsg) {
+	public void setExpectedResponseMsg(String _expectedResponseMsg) {
 		expectedResponseMsg = _expectedResponseMsg;
 	}
 
-	protected void setResponseBackMsg(String _responseBackMsg) {
+	public void setResponseBackMsg(String _responseBackMsg) {
 		responseBackMsg = _responseBackMsg;
 	}
 
-	protected void disconnect() {
+	public void disconnect() {
 		if (port != null) {
 			port.clear();
 			port.stop();
@@ -73,18 +73,18 @@ public abstract class SrlCom {
 		isConnected = false;
 	}
 
-	protected void attemptConnection(int _portIdx) {
+	public void attemptConnection(int _portIdx) {
 		String portName_ = Serial.list()[_portIdx];
 		disconnect();
 		port = new Serial(p5, portName_, baudRate, parity, dataBits, stopBits);
 		connectionAttemptTimeNs = System.nanoTime();
 	}
 
-	protected abstract void sendMsg(String _msg);
+	public abstract void sendMsg(String _msg);
 
-	protected abstract void receiveMsg(String _msg);
+	public abstract void receiveMsg(String _msg);
 
-	protected void assembleCharAndDeliverMsg(char _inChar) {
+	public void assembleCharAndDeliverMsg(char _inChar) {
 		if (_inChar != delimeter)
 			charAssemblingBuffer.append(_inChar);
 		else {
@@ -95,11 +95,11 @@ public abstract class SrlCom {
 		}
 	}
 
-	protected long getWaitingTimeElapsedMs() {
+	public long getWaitingTimeElapsedMs() {
 		return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - connectionAttemptTimeNs);
 	}
 
-	protected void attemptConnectionLoop(int _occupiedPortIdx) {
+	public void attemptConnectionLoop(int _occupiedPortIdx) {
 		while (!isConnected)
 			if (getWaitingTimeElapsedMs() > responseWaitingTimeMs) {
 				portIdx++;

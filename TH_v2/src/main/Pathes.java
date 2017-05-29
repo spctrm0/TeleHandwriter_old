@@ -12,27 +12,27 @@ public class Pathes {
 		pathes = Collections.synchronizedList(new ArrayList<Path>());
 	}
 
-	protected int getPathesNum() {
+	public int getPathesNum() {
 		return pathes.size();
 	}
 
-	protected Path getPath(int _idx) {
+	public Path getPath(int _idx) {
 		return pathes.get(_idx);
 	}
 
-	protected Path getLastPath() {
+	public Path getLastPath() {
 		return pathes.get(pathes.size() - 1);
 	}
 
-	protected void addPath(int _x, int _y, float _z, long _timeMs) {
+	public void addPath(int _x, int _y, float _z, long _timeMs) {
 		pathes.add(new Path(_x, _y, _z, _timeMs));
 	}
 
-	protected void addPoint(int _x, int _y, float _z, long _timeMs) {
+	public void addPoint(int _x, int _y, float _z, long _timeMs) {
 		getLastPath().addPoint(_x, _y, _z, _timeMs, false);
 	}
 
-	protected void completePath(int _x, int _y, float _z, long _timeMs) {
+	public void completePath(int _x, int _y, float _z, long _timeMs) {
 		getLastPath().addPoint(_x, _y, _z, _timeMs, true);
 	}
 }

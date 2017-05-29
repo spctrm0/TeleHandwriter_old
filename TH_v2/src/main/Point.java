@@ -13,25 +13,26 @@ public class Point {
 		z = _z;
 		timeMs = _timeMs;
 		isTail = _isTail;
+		System.out.println("add");
 	}
 
-	protected int getX() {
+	public int getX() {
 		return x;
 	}
 
-	protected int getY() {
+	public int getY() {
 		return y;
 	}
 
-	protected float getZ() {
+	public float getZ() {
 		return z;
 	}
 
-	protected long getTimeMs() {
+	public long getTimeMs() {
 		return timeMs;
 	}
 
-	protected boolean isTail() {
+	public boolean isTail() {
 		return isTail;
 	}
 }

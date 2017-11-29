@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="core/core.jar"/>
+	<classpathentry kind="lib" path="core/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="core/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="core/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="core/jogl-all.jar"/>
+	<classpathentry kind="lib" path="nativeLibs/serial/library/jssc.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="TH_RAMPS/nativeLibs/serial/library/windows64"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="nativeLibs/serial/library/serial.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
